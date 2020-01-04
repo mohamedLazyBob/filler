@@ -1,7 +1,7 @@
-NAME= filler
+NAME= mzaboub.filler
 
 SRC_PATH= src
-SRC_NAME= parser.c
+SRC_NAME= parser.c resolve.c
 
 HDR_PATH= headers
 HDR_NAME= filler.h
@@ -32,7 +32,7 @@ all:$(NAME)
 
 $(NAME): $(LIB_PATH)/$(LIB) $(OBJ)
 	@ echo "\033[1;32m>> Filler binary is ready ;)\n\033[0m"
-	$(CC) $(LD_FLAGS) $(LD_LIBS) $(OBJ) -o $@
+	@$(CC) $(LD_FLAGS) $(LD_LIBS) $(OBJ) -o $@
 
 $(LIB_PATH)/$(LIB):
 	@make -C $(LIB_PATH)
