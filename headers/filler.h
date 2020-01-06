@@ -17,13 +17,14 @@
 
 /*		resolve.c	*/
 
-int		ft_place_token(char **map, int player, int fd);
+int		ft_place_token(char **map, char **token, int player, int fd);
 
 
 
-/*		parser.c	*/
+/*		draw_map.c	*/
 void	ft_parse_input(int fd);
-void	ft_get_the_map(int fd, char ***map);
-void	ft_get_player(int *player, int fd);
-void	print_map(int fd, int x, int y, char **map);
+int 	ft_get_the_map(int fd, char ***map);
+int 	ft_get_player(int *player, int fd);
+void 	print_map(int fd, char **map);
+int     is_around_other(char **map, int i, int j, char this);
 #endif

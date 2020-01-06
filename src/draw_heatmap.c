@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/02 17:41:39 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/05 21:49:14 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/06 03:38:19 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,30 @@ void	place_around(char **map, int i, int j, char this)
 	}
 
 }
-int		is_around_other(char **map, int i, int j)
+int		is_around_other(char **map, int i, int j, char this)
 {
 	if (i > 0)
 	{
-		if ((j > 0) && map[i - 1][j - 1] == '5')
+		if ((j > 0) && map[i - 1][j - 1] == this)
 			return (1);
-		if (map[i - 1][j] == '5')
+		if (map[i - 1][j] == this)
 			return (1);
-		if (map[i - 1][j + 1] == '5')
+		if (map[i - 1][j + 1] == this)
 			return (1);
 	}
 
-	if ((j > 0) && map[i][j - 1] == '5')
+	if ((j > 0) && map[i][j - 1] == this)
 			return (1);
-	if (map[i][j + 1] == '5')
+	if (map[i][j + 1] == this)
 			return (1);
 
 	if (map[i + 1] != NULL)
 	{
-		if ((j > 0) && map[i + 1][j - 1] == '5')
+		if ((j > 0) && map[i + 1][j - 1] == this)
 			return (1);
-		if (map[i + 1][j] == '5')
+		if (map[i + 1][j] == this)
 			return (1);
-		if (map[i + 1][j + 1] == '5')
+		if (map[i + 1][j + 1] == this)
 			return (1);
 	}
 	return (0);
@@ -112,7 +112,7 @@ int		place_near2(char **map, char before, char this, int fd)
 			if (map[i][j] == before)
 			{
 				place_around(map, i, j, this);
-//				if (1 == is_around_other(map, i, j))
+//				if (1 == is_around_other(map, i, j, '5'))
 //					return (0);
 				ret = 1;
 			}
@@ -123,7 +123,7 @@ int		place_near2(char **map, char before, char this, int fd)
 	return (ret);
 }
 
-int		ft_place_token(char **map, int player, int fd)
+int		ft_place_token(char **map, char **token, int player, int fd)
 {
 	int bol;
 	int	i;
@@ -151,6 +151,7 @@ int		ft_place_token(char **map, int player, int fd)
 		this++;
 		i++;
 	}
-	print_map(fd, 15, 17, map);
+	dprintf(fd, "-------------- after heatmap ----\n");
+	print_map(fd, map);
 	return (bol);
 }

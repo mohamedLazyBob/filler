@@ -26,6 +26,7 @@ typedef struct	s_list
 void			ft_bzero(void	*s, size_t	n);
 int				ft_memcmp(const void *s1, const void *s2, size_t n);
 void			ft_memdel(void **ap);
+void			ft_memdel2d(void	***map);
 void			*ft_memcpy(void	*dst, const void	*src, size_t	n);
 void			*ft_memset(void *b, int c, size_t len);
 void			*ft_memccpy(void	*dst, const void	*src, int c, size_t	n);
@@ -64,6 +65,7 @@ int				ft_atoi(const char *str);
 int				ft_isupper(int c);
 int				ft_isalpha(int c);
 int				ft_isdigit(int c);
+int				ft_isstrdigit(char *str);
 int				ft_isalnum(int c);
 int				ft_isascii(int c);
 int				ft_isprint(int c);
@@ -100,4 +102,6 @@ int				get_next_line(const int fd, char **line);
 */
 # define FD_MAX 4864
 # define BUFF_SIZE 20
+# define TRUE 1
+# define FALSE 0
 #endif

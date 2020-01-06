@@ -67,7 +67,7 @@ HDR_FLAGS= -I headers
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) 
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 	@echo "\033[1;32m ->> libftprintf: library compilled.\n\033[0m"

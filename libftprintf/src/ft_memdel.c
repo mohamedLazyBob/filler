@@ -20,3 +20,18 @@ void	ft_memdel(void **ap)
 		*ap = NULL;
 	}
 }
+void			ft_memdel2d(void ***map)
+{
+	char	**ap;
+	int 	i;
+
+	ap = (char**)*map;
+	i = 0;
+	while (ap + i != NULL)
+	{
+		free (ap + i);
+		i++;
+	}
+	free(ap);
+	*map = 0;
+}
