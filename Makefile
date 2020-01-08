@@ -1,7 +1,7 @@
 NAME= mzaboub.filler
 
 SRC_PATH= src
-SRC_NAME= parser.c resolve.c draw_heatmap.c
+SRC_NAME= parser.c resolve.c draw_heatmap.c fortest_funcs.c
 
 HDR_PATH= headers
 HDR_NAME= filler.h

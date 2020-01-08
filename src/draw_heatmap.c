@@ -6,13 +6,17 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/02 17:41:39 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/06 03:38:19 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/08 05:20:51 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 # define TRUE 1
 # define FALSE 0
+
+/*
+** ***************************************************************************
+*/
 
 int		place_near(char **map, char p1, char p2, char this)
 {
@@ -39,6 +43,11 @@ int		place_near(char **map, char p1, char p2, char this)
 	}
 	return (ret);
 }
+
+/*
+** ***************************************************************************
+*/
+
 void	place_around(char **map, int i, int j, char this)
 {
 	if (i > 0)
@@ -67,6 +76,11 @@ void	place_around(char **map, int i, int j, char this)
 	}
 
 }
+
+/*
+** ***************************************************************************
+*/
+
 int		is_around_other(char **map, int i, int j, char this)
 {
 	if (i > 0)
@@ -96,6 +110,10 @@ int		is_around_other(char **map, int i, int j, char this)
 	return (0);
 }
 
+/*
+** ***************************************************************************
+*/
+
 int		place_near2(char **map, char before, char this, int fd)
 {
 	int i;
@@ -112,7 +130,7 @@ int		place_near2(char **map, char before, char this, int fd)
 			if (map[i][j] == before)
 			{
 				place_around(map, i, j, this);
-//				if (1 == is_around_other(map, i, j, '5'))
+//				if (1 == is_around_other(map, i, j, '1'))
 //					return (0);
 				ret = 1;
 			}
@@ -123,7 +141,11 @@ int		place_near2(char **map, char before, char this, int fd)
 	return (ret);
 }
 
-int		ft_place_token(char **map, char **token, int player, int fd)
+/*
+** ***************************************************************************
+*/
+
+int		ft_drow_heatmap(char **map, char **token, int player, int fd)
 {
 	int bol;
 	int	i;
@@ -140,7 +162,9 @@ int		ft_place_token(char **map, char **token, int player, int fd)
 	}
 
 	place_near(map, p1, p2, 'A');
-	place_near(map, p2, p1, '5');
+	place_near(map, p2, p1, '1');
+//	dprintf(fd, "-------------- before heatmap ----\n");
+//	print_map(fd, map);
 	i = 0;
 	this = 'B';
 	while (TRUE)
@@ -151,7 +175,12 @@ int		ft_place_token(char **map, char **token, int player, int fd)
 		this++;
 		i++;
 	}
-	dprintf(fd, "-------------- after heatmap ----\n");
-	print_map(fd, map);
+//	dprintf(fd, "-------------- after heatmap ----\n");
+//	print_map(fd, map);
 	return (bol);
 }
+
+/*
+** ***************************************************************************
+*/
+
