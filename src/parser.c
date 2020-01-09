@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/01 11:46:49 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/08 06:19:36 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/08 12:17:04 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,7 +305,7 @@ void	ft_parse_input(int fd)
 		free(map);
 		if (best_score.i == -1337 && best_score.j == -1337)
 			break;
-		sleep(1);
+//		sleep(1);
 	}
 }
 
