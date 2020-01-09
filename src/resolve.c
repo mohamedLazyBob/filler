@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 21:37:31 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/08 05:21:03 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/09 09:59:15 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ t_point	ft_resoleve(char **map, int fd, char **token)
 		ij.j = 4;
 		while (map[ij.i][ij.j])
 		{
-			if (map[ij.i][ij.j] == '1')
+			if (map[ij.i][ij.j] == -1)
 			{
-				// check the best score to place it in this '1'
+				// check the best score to place it in this -1
 				if ((score = get_point_score(map, ij, &pt_bestscr, token, fd)) < bestscore)
 				{
 					bestscore = score;
@@ -64,7 +64,7 @@ int		get_point_score(char **map, t_point ij, t_point *pos, char **token, int fd)
 		while (token[xy.i][xy.j])
 		{
 			ret = is_placeable(map, ij, token, xy, fd);
-			if ((ret != -1) && (ret < score))
+			if ((ret != -1) && (ret <= score))
 			{
 				score = ret;	
 				pos->i = ij.i - xy.i;
@@ -100,16 +100,16 @@ int		is_placeable(char **map, t_point a, char **token, t_point b, int fd)
 		{
 			if (token[tok.i][tok.j] == '*')
 			{
-				if (row < 1 || col < 4 || (map[row][col] == '\0') || map[row][col] == 'A')//the original pading of the map
+				if (row < 1 || col < 4 || (map[row][col] == '\0') || map[row][col] == 1)//the original pading of the map
 					return (-1);
-				if (map[row][col] != '1')
+				if (map[row][col] != -1)
 					score += map[row][col];
-				else if ((map[row][col] == '1') && (bol == 0))
+				else if ((map[row][col] == -1) && (bol == 0))
 				{
 					score += (int)map[row][col];
 					bol = 1;
 				}
-				else if ((map[row][col] == '1') && (bol == 1))
+				else if ((map[row][col] == -1) && (bol == 1))
 					return (-1);
 			}
 			tok.j++;

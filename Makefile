@@ -32,7 +32,7 @@ all:$(NAME)
 
 $(NAME): $(LIB_PATH)/$(LIB) $(OBJ)
 	@ echo "\033[1;32m>> Filler binary is ready ;)\n\033[0m"
-	@$(CC) $(LD_FLAGS) $(LD_LIBS) $(OBJ) -o $@
+	@$(CC) $(LD_FLAGS) $(LD_LIBS) $(CFLAGS) $(OBJ) -o $@
 
 $(LIB_PATH)/$(LIB):
 	@make -C $(LIB_PATH)

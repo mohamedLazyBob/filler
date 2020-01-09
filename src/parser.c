@@ -6,23 +6,47 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/01 11:46:49 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/08 12:17:04 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/09 11:17:03 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-#include <fcntl.h>
 
 void	print_map(int fd, char **map)
 {
-	int i = 0;
-	dprintf(fd, "--------------------------------\n");
+	int i;
+	int j;
+
+	i = 1;
+	ft_putstr_fd("--------------------------------\n", fd);
+	dprintf(fd, "%s\n", map[0]);
 	while (map[i] != NULL)
 	{
-		dprintf(fd, "%s|\n", map[i]);
+		//ft_putstr_fd(map[i], fd);
+		dprintf(fd, "%.3d ", i);
+		j = 4;
+		while (map[i][j])
+		{
+			dprintf(fd, "%2d, ", map[i][j]);
+			j++;
+		}
+		dprintf(fd, "|\n");
 		i++;
 	}
-	dprintf(fd, "--------------------------------\n");
+	ft_putstr_fd("--------------------------------\n", fd);
+}
+
+/*
+** ***************************************************************************
+*/
+
+void	ft_print_error(char *str, char *line, int fd)
+{
+	ft_putstr_fd("============ ERROR ============\n", fd);
+	ft_putstr_fd(str, fd);
+	ft_putstr_fd(" == [", fd);
+	ft_putstr_fd(line, fd);
+	ft_putstr_fd("]\n", fd);
 }
 
 /*
@@ -32,26 +56,26 @@ void	print_map(int fd, char **map)
 int		ft_get_player(int *player, int fd)
 {
 	char	*line;
-	int		i;
+	int		len;
 
 	get_next_line(0, &line);
-//	dprintf(fd, "[%s]\n", line);
-	i = ft_strlen("$$$ exec ");//8
-	if (ft_strncmp("$$$ exec ", line, i))
+	len = ft_strlen("$$$ exec p");
+	if (ft_strnequ("$$$ exec p", line, len) == FALSE)
 	{
-		dprintf(fd, "line == [%s]\n", line);
+		ft_print_error("in [$$$ ...]", line, fd);
+		ft_memdel((void**)&line);
 		return (FALSE);
 	}
-	i++;
-	if (FALSE ==ft_strnequ(line + i, "p", 1))
-		*player = ft_atoi(line + i);
+	if (ft_isdigit(line[len]) == TRUE)
+		*player = ft_atoi(line + len);
 	else
 	{
-		dprintf(fd, "line == [%s]\n", line);
+		ft_print_error("player number", line, fd);
+		ft_memdel((void**)&line);
 		return (FALSE);
 	}
-	if (ft_strequ(line + 11, " : [mzaboub.filler]") == 0)
-		dprintf(fd, "{red} player nbr is valid, but player name isn't.{eoc}\n");
+	if (ft_strequ(line + 11, " : [mzaboub.filler]") == FALSE)
+		ft_print_error("player nbr is valid, but player name isn't.", line, fd);
 	ft_memdel((void**)&line);
 	return (TRUE);
 }
@@ -60,7 +84,7 @@ int		ft_get_player(int *player, int fd)
 ** ***************************************************************************
 */
 
-int		ft_check_map(char ***map)
+int		ft_check_map(char ***map, int rowes)
 {
 	int i;
 	int j;
@@ -71,15 +95,20 @@ int		ft_check_map(char ***map)
 		j = 4;
 		while ((*map)[i][j])
 		{
-			if ((*map)[i][j] != ' ' && (*map)[i][j] != '.' && (*map)[i][j] != 'o' && \
-					(*map)[i][j] != 'x' && (*map)[i][j] != 'O' && (*map)[i][j] != 'X' &&\
-				   	(*map)[i][j] != '\n')
+			if (j > rowes + 4)
+				return (FALSE);
+			if ((*map)[i][j] != '.' && \
+					(*map)[i][j] != 'o' && (*map)[i][j] != 'x' && \
+					(*map)[i][j] != 'O' && (*map)[i][j] != 'X' && \
+					(*map)[i][j] != '\n')
 			{
-			//	ft_memdel2d((void***)map);
+				ft_memdel2d(map);
 				return (FALSE);
 			}
 			j++;
 		}
+		if (j != (rowes + 4))
+			return (FALSE);
 		i++;
 	}
 	return (TRUE);
@@ -100,10 +129,10 @@ int		ft_check_token(char ***token)
 		j = 0;
 		while ((*token)[i][j])
 		{
-			if ((*token)[i][j] != ' ' && (*token)[i][j] != '.' && \
+			if ((*token)[i][j] != '.' && \
 					(*token)[i][j] != '*' && (*token)[i][j] != '\n')
 			{
-			//	ft_memdel2d((void***)token);
+				ft_memdel2d(token);
 				return (FALSE);
 			}
 			j++;
@@ -120,39 +149,40 @@ int		ft_check_token(char ***token)
 int		ft_get_the_map(int fd, char ***map)
 {
 	char	*line;
-	char 	**split;
-	int		lines, cols, i;
+	char	**splt;
+	int		lines;
+	int		i;
 
 	get_next_line(0, &line);
-//	dprintf(fd, "[%s]\n", line);
-	split = ft_strsplit(line, ' ');
+	splt = ft_strsplit(line, ' ');
 	ft_memdel((void**)&line);
-	if (ft_strequ("Plateau", split[0]) == 0)
-		return (FALSE);
-	split[2][ft_strlen(split[2]) - 1] = '\0';
-	if ((ft_isstrdigit(split[1]) == FALSE) || (ft_isstrdigit(split[2]) == FALSE))
+	if (ft_strequ("Plateau", splt[0]) == FALSE)
 	{
-		dprintf(fd, "Plateau line/numbers, ins't valid.\n");
+		ft_memdel2d(&splt);
 		return (FALSE);
 	}
-	lines = ft_atoi(split[1]);
-//	dprintf(fd, "line == %d.\n", lines);
-	cols = ft_atoi(split[2]);
+	splt[2][ft_strlen(splt[2]) - 1] = '\0';
+	if ((ft_isstrdigit(splt[1]) == FALSE) || (ft_isstrdigit(splt[2]) == FALSE))
+	{
+		ft_memdel2d(&splt);
+		ft_print_error("Plateau line/numbers, ins't valid.\n", NULL, fd);
+		return (FALSE);
+	}
+	lines = ft_atoi(splt[1]);
+	int rowes = ft_atoi(splt[2]);
 	if (!(*map = (char**)malloc(sizeof(char*) * (lines + 2))))
 	{
-		perror("map isn't allocated : ");
+		ft_memdel2d(&splt);
+		ft_print_error("map isn't allocated : ", NULL, fd);
 		return (FALSE);
 	}
 	i = -1;
-	while (++i < (1 + lines))
-	{
+	while (++i < (lines + 1))
 		get_next_line(0, *map + i);
-//		dprintf(fd, "[%s]\n", *(*map + i));
-	}
 	(*map)[i] = NULL;
-//	print_map(fd, *map);
-//	ft_memdel2d((void***)split);
-	return (ft_check_map(map));
+	ft_memdel2d(&splt);
+	print_map(fd, *map);
+	return (ft_check_map(map, rowes));
 }
 
 /*
@@ -162,44 +192,40 @@ int		ft_get_the_map(int fd, char ***map)
 int		ft_get_the_token(int fd, char ***token)
 {
 	char	*line;
-	char	**split;
+	char	**splt;
 	int		lines;
 	int		cols;
 	int		i;
 
 	get_next_line(0, &line);
-//	dprintf(fd, "[%s]\n", line);
-	split = ft_strsplit(line, ' ');
+	splt = ft_strsplit(line, ' ');
 	ft_memdel((void**)&line);
-	if (ft_strequ("Piece", split[0]) == 0)
+	if (ft_strequ("Piece", splt[0]) == FALSE)
 	{
-		dprintf(fd, "1st line : {%s}\n", split[0]);
+		ft_print_error("token : ", splt[0], fd);
+		ft_putstr_fd(line, fd);
+		ft_memdel2d(&splt);
 		return (FALSE);
 	}
-	split[2][ft_strlen(split[2]) - 1] = '\0';
-	if ((ft_isstrdigit(split[1]) == FALSE) || (ft_isstrdigit(split[2]) == FALSE))
+	splt[2][ft_strlen(splt[2]) - 1] = '\0';
+	if ((ft_isstrdigit(splt[1]) == FALSE) || (ft_isstrdigit(splt[2]) == FALSE))
 	{
-		dprintf(fd, "x - [%s].\n", split[1]);
-		dprintf(fd, "y - [%s].\n", split[2]);
-		dprintf(fd, "piece line/numbers, ins't valid.\n");
+		ft_print_error("piece line/numbers, ins't valid.\n", NULL, fd);
+		ft_memdel2d(&splt);
 		return (FALSE);
 	}
-	lines = ft_atoi(split[1]);
-	cols = ft_atoi(split[2]);
+	lines = ft_atoi(splt[1]);
 	if (!(*token = (char**)malloc(sizeof(char*) * (lines + 1))))
 	{
-		perror("piece isn't allocated : ");
+		ft_memdel2d(&splt);
+		perror("piece isn't allocated ");
 		return (FALSE);
 	}
 	i = -1;
 	while (++i < lines)
-	{
 		get_next_line(0, *token + i);
-//		dprintf(fd, "[%s]\n", *(*token + i));
-	}
 	(*token)[i] = NULL;
-//	ft_memdel2d((void***)&split);
-	//print_map(fd, *token);
+	ft_memdel2d(&splt);
 	return (ft_check_token(token));
 }
 
@@ -207,35 +233,11 @@ int		ft_get_the_token(int fd, char ***token)
 ** ***************************************************************************
 */
 
-void	ft_shift_token(char **token, t_point *pad)
+static	void	ft_delet_pad(char **token, int row, int col)
 {
-	int	i, j;
-	int	small_row;
-	int	small_col;
-	int	max_col;
+	int	i;
+	int	j;
 
-	small_row = INT_MAX;
-	small_col = INT_MAX;
-	max_col = 0;
-	i = 0;
-	while (token[i])
-	{
-		j = 0;
-		while (token[i][j])
-		{
-			if (token[i][j] == '*')
-			{
-				if (i < small_row)
-					small_row = i;
-				if (j < small_col)
-					small_col = j;
-				if (j > max_col)
-					max_col = j;
-			}
-			j++;
-		}
-		i++;
-	}
 	i = 0;
 	while (token[i])
 	{
@@ -245,83 +247,85 @@ void	ft_shift_token(char **token, t_point *pad)
 			if (token[i][j] == '*')
 			{
 				token[i][j] = '.';
-				token[i - small_row][j - small_col] = '*';
+				token[i - row][j - col] = '*';
 			}
 			j++;
 		}
-	//	token[i][max_col - small_col + 1] = '\0';
 		i++;
 	}
-	pad->i = small_row;
-	pad->j = small_col;
+}
+
+void	ft_shift_token(char **token, t_point *pad)
+{
+	int	i;
+	int	j;
+
+	pad->i = INT_MAX;
+	pad->j = INT_MAX;
+	i = -1;
+	while (token[++i])
+	{
+		j = -1;
+		while (token[i][++j])
+		{
+			if (token[i][j] == '*' && (i < pad->i))
+				pad->i = i;
+			if (token[i][j] == '*' && (j < pad->j))
+				pad->j = j;
+		}
+	}
+	ft_delet_pad(token, pad->i, pad->j);
 }
 
 /*
 ** ***************************************************************************
 */
 
-void	ft_parse_input(int fd)
+void	ft_parse_input(int fd, int player)
 {
-	int		i = 0;
-	int 	bol;
-	int		player;
 	char	**map;
 	char	**token;
 	t_point	pad;
-	t_point	best_score;
+	t_point	score;
 
-	if (FALSE == ft_get_player(&player, fd))
-	{
-		dprintf(fd, "Player isn't Valid.\n");
-		return ;
-	}
-	bol = 1;
-	while (bol == 1)
+	
+
+	while (TRUE)
 	{
 		if (FALSE == ft_get_the_map(fd, &map))
-		{
-			dprintf(fd, "Map isn't valid.\n");
 			return ;
-		}
-//		dprintf(fd, "=====================\n");
+		ft_putstr_fd("-------------------- HERE ----------------------\n", fd);
+		print_map(fd, map);
 		if (FALSE == ft_get_the_token(fd, &token))
-		{
-			dprintf(fd, "piece is not Valid.\n");
-			//ft_memdel2d((void***)&map);
 			return ;
-		}
 		ft_shift_token(token, &pad);
-		ft_drow_heatmap(map, token, player, fd);
-		best_score = ft_resoleve(map, fd, token);
-		dprintf(fd, "best place is %d, %d.\n", best_score.i - pad.i, best_score.j - pad.j);
-		if (best_score.i != -1337 && best_score.j != -1337)
-		{
-			ft_printf("%d %d\n", best_score.i - pad.i - 1, best_score.j - pad.j - 4);
-			ft_place_token(fd, map, best_score.i, best_score.j, token);
-		}
-		i = 0;
-		while (map[i])
-			ft_memdel((void**)(map + i));
-		free(map);
-		if (best_score.i == -1337 && best_score.j == -1337)
-			break;
-//		sleep(1);
+		ft_drow_heatmap(map, player, fd);
+		score = ft_resoleve(map, fd, token);
+		if (score.i != -1337 && score.j != -1337)
+			ft_printf("%d %d\n", score.i - pad.i - 1, score.j - pad.j - 4);
+		ft_memdel2d(&map);
+		if (score.i == -1337 && score.j == -1337)
+			break ;
 	}
+	ft_printf("%d %d\n", 0, 0);
 }
 
 /*
 ** ***************************************************************************
 */
-
 
 int		main(void)
 {
 	int fd;
+	int	player;
 
 	fd = open("text", O_WRONLY);
-	dprintf(fd, "-------------------- start -- %u --------------------\n", (unsigned)time(NULL));
-	ft_parse_input(fd);
-	dprintf(fd, "-------------------- end   -- %u --------------------\n", (unsigned)time(NULL));
+	ft_putstr_fd("-------------------- start ----------------------\n", fd);
+	if (TRUE == ft_get_player(&player, fd))
+		ft_parse_input(fd, player);
+	else
+		write(fd, "Player isn't Valid.\n", 20);
+	ft_putstr_fd("--------------------  end  ----------------------\n", fd);
 	close(fd);
 	return (0);
 }
