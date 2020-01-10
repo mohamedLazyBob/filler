@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 05:27:49 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 13:52:19 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 14:57:46 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 ** ***************************************************************************
 */
 
-int				ft_get_the_token(int fd, char ***token)
+int				ft_get_the_token(char ***token)
 {
 	int		lines;
 	int		cols;
 	int		i;
 
-	if (ft_get_indexs(fd, "Piece", &lines, &cols) == FALSE)
+	if (ft_get_indexs("Piece", &lines, &cols) == FALSE)
 		return (FALSE);
 	if (!(*token = (char**)malloc(sizeof(char*) * (lines + 1))))
 	{
@@ -125,7 +125,7 @@ int				ft_check_token(char ***token, int cols)
 ** ***************************************************************************
 */
 
-int				ft_get_indexs(int fd, char *str, int *rows, int *cols)
+int				ft_get_indexs(char *str, int *rows, int *cols)
 {
 	char	*line;
 	char	**splt;
@@ -142,7 +142,7 @@ int				ft_get_indexs(int fd, char *str, int *rows, int *cols)
 	if ((ft_isstrdigit(splt[1]) == FALSE) || (ft_isstrdigit(splt[2]) == FALSE))
 	{
 		ft_memdel2d(&splt);
-		ft_print_error("Line/numbers, ins't valid.\n", str, fd);
+		ft_print_error("Line/numbers, ins't valid.\n", str);
 		return (FALSE);
 	}
 	*rows = ft_atoi(splt[1]);

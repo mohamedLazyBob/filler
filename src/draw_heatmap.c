@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/02 17:41:39 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 08:35:13 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 14:55:54 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int		place_near2(char **map, char before, char this)
 ** ***************************************************************************
 */
 
-void	ft_drow_heatmap(char **map, int player, int fd)
+void	ft_drow_heatmap(char **map, int player)
 {
 	int		i;
 	int		this;
@@ -162,7 +162,6 @@ void	ft_drow_heatmap(char **map, int player, int fd)
 		this++;
 		i++;
 	}
-	print_map(fd, map);
 }
 
 /*

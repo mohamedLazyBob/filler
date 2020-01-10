@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/01 12:05:46 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 11:59:32 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 14:54:37 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,33 +43,33 @@ int				place_near(char **map, char p1, char p2, char this);
 void			place_around(char **map, int i, int j, char this);
 int				is_around_other(char **map, int i, int j, char this);
 int				place_near2(char **map, char before, char this);
-void			ft_drow_heatmap(char **map, int player, int fd);
+void			ft_drow_heatmap(char **map, int player);
 
 /*
 **	parser.c
 **	this is the main
 */
 
-int				ft_get_player(int *player, int fd);
+int				ft_get_player(int *player);
 int				ft_check_map(char ***map, int rowes);
-int				ft_get_the_map(int fd, char ***map);
-void			ft_parse_input(int fd, int player);
+int				ft_get_the_map(char ***map);
+void			ft_parse_input(int player);
 
 /*
 **	fortest_funcs.x
 **	void	ft_place_token(int	fd, char **map, int i, int j, char **token);
 */
 
-void			ft_place_token(int fd, char **map, int i, int j, char **token);
-void			print_map(int fd, char **map);
-void			ft_print_error(char *str, char *line, int fd);
+void			ft_place_token(char **map, int i, int j, char **token);
+void			print_map(char **map);
+void			ft_print_error(char *str, char *line);
 
 /*
 **	token_functions.c
 */
 
-int				ft_get_the_token(int fd, char ***token);
+int				ft_get_the_token(char ***token);
 void			ft_shift_token(char **token, t_point *pad);
 int				ft_check_token(char ***token, int cols);
-int				ft_get_indexs(int fd, char *str, int *rows, int *cols);
+int				ft_get_indexs(char *str, int *rows, int *cols);
 #endif

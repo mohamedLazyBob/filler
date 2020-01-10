@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/01 11:46:49 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 13:52:17 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 14:55:24 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** ***************************************************************************
 */
 
-int		ft_get_player(int *player, int fd)
+int		ft_get_player(int *player)
 {
 	char	*line;
 	int		len;
@@ -27,7 +27,7 @@ int		ft_get_player(int *player, int fd)
 	len = ft_strlen("$$$ exec p");
 	if (ft_strnequ("$$$ exec p", line, len) == FALSE)
 	{
-		ft_print_error("in [$$$ ...]", line, fd);
+		ft_print_error("in [$$$ ...]", line);
 		ft_memdel((void**)&line);
 		return (FALSE);
 	}
@@ -35,12 +35,12 @@ int		ft_get_player(int *player, int fd)
 		*player = ft_atoi(line + len);
 	else
 	{
-		ft_print_error("player number", line, fd);
+		ft_print_error("player number", line);
 		ft_memdel((void**)&line);
 		return (FALSE);
 	}
 	if (ft_strequ(line + 11, " : [mzaboub.filler]") == FALSE)
-		ft_print_error("player nbr is valid, but player name isn't.", line, fd);
+		ft_print_error("player nbr is valid, but player name isn't.", line);
 	ft_memdel((void**)&line);
 	return (TRUE);
 }
@@ -82,17 +82,17 @@ int		ft_check_map(char ***map, int rowes)
 ** ***************************************************************************
 */
 
-int		ft_get_the_map(int fd, char ***map)
+int		ft_get_the_map(char ***map)
 {
 	int		cols;
 	int		rows;
 	int		i;
 
-	if (ft_get_indexs(fd, "Plateau", &rows, &cols) == FALSE)
+	if (ft_get_indexs("Plateau", &rows, &cols) == FALSE)
 		return (FALSE);
 	if (!(*map = (char**)malloc(sizeof(char*) * (rows + 2))))
 	{
-		ft_print_error("map isn't allocated : ", NULL, fd);
+		ft_print_error("map isn't allocated : ", NULL);
 		return (FALSE);
 	}
 	i = -1;
@@ -106,7 +106,7 @@ int		ft_get_the_map(int fd, char ***map)
 ** ***************************************************************************
 */
 
-void	ft_parse_input(int fd, int player)
+void	ft_parse_input(int player)
 {
 	char	**map;
 	char	**token;
@@ -115,12 +115,12 @@ void	ft_parse_input(int fd, int player)
 
 	while (TRUE)
 	{
-		if (FALSE == ft_get_the_map(fd, &map))
+		if (FALSE == ft_get_the_map(&map))
 			return ;
-		if (FALSE == ft_get_the_token(fd, &token))
+		if (FALSE == ft_get_the_token(&token))
 			return ;
 		ft_shift_token(token, &pad);
-		ft_drow_heatmap(map, player, fd);
+		ft_drow_heatmap(map, player);
 		score = ft_resolve(map, token);
 		if (score.i != -1337 && score.j != -1337)
 			ft_printf("%d %d\n", score.i - pad.i - 1, score.j - pad.j - 4);
@@ -138,17 +138,12 @@ void	ft_parse_input(int fd, int player)
 
 int		main(void)
 {
-	int fd;
 	int	player;
 
-	fd = open("text", O_WRONLY);
-	ft_putstr_fd("-------------------- start ----------------------\n", fd);
-	if (TRUE == ft_get_player(&player, fd))
-		ft_parse_input(fd, player);
+	if (TRUE == ft_get_player(&player))
+		ft_parse_input(player);
 	else
-		write(fd, "Player isn't Valid.\n", 20);
-	ft_putstr_fd("--------------------  end  ----------------------\n", fd);
-	close(fd);
+		write(2, "Player isn't Valid.\n", 20);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:57:45 by mzaboub           #+#    #+#             */
-/*   Updated: 2019/04/12 17:09:08 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 14:46:03 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static	int	ft_ligne(char const *s, char c, char stop)
 		if (s[i] != c && stop == c)
 			lignenbr++;
 	}
-	if (s[i - 1] != c && stop == '\0')
+	if ((i > 0) && s[i - 1] != c && stop == '\0')
 		lignenbr++;
 	return (lignenbr);
 }

@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 22:41:56 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 12:00:17 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 14:35:18 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,22 @@ void	ft_memdel(void **ap)
 	}
 }
 
-void	ft_memdel2d(char ***map)
+void	ft_memdel2d(char ***ap)
 {
-	char	**ap;
+	char	**map;
 	int		i;
 
-	ap = *map;
 	i = 0;
-	if (map && ap)
+	map = *ap;
+	if (map)
 	{
-		while (ap[i] != NULL)
+		while (map[i] != NULL)
 		{
-			free(ap[i]);
-			ap[i] = NULL;
+			free(map[i]);
+			map[i] = NULL;
 			i++;
 		}
-		ft_memdel((void**)*map);
-		*map = NULL;
+		free(map);
+		*ap = NULL;
 	}
 }
