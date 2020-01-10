@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 05:27:49 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 09:32:01 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 09:40:58 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,11 @@ int				ft_get_indexs(int fd, char *str, int *rows, int *cols)
 	}
 	*rows = ft_atoi(splt[1]);
 	*cols = ft_atoi(splt[2]);
+	dprintf(2, "\n\nrow == %d\n", *rows);
+	dprintf(2, "col == %d\n\n\n", *cols);
 	ft_memdel2d(&splt);
+	if (*rows <= 0 || *cols <= 0)
+			return (FALSE);
 	return (TRUE);
 }
 

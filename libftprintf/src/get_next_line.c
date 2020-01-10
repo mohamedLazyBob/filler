@@ -41,7 +41,7 @@ static int		ft_lastline(char **tab, char **line, int nbr)
 {
 	if (nbr == -1)
 		return (-1);
-	if (nbr == 0 && !ft_strlen(*tab))
+	if (nbr == 0 && (ft_strlen(*tab) == 0))
 		return (0);
 	*line = *tab;
 	*tab = NULL;

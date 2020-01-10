@@ -31,8 +31,8 @@ HDR_FLAGS= -I headers
 all:$(NAME)
 
 $(NAME): $(LIB_PATH)/$(LIB) $(OBJ)
-	@ echo "\033[1;32m>> Filler binary is ready ;)\n\033[0m"
 	@$(CC) $(LD_FLAGS) $(LD_LIBS) $(CFLAGS) $(OBJ) -o $@
+	@ echo "\033[1;32m>> Filler binary is ready ;)\033[0m"
 
 $(LIB_PATH)/$(LIB):
 	@make -C $(LIB_PATH)
@@ -45,11 +45,11 @@ clean:
 	@rm -fr $(OBJ)
 	@rmdir $(OBJ_PATH) 2> /dev/null || true
 	@make -C libftprintf clean
-	@echo "\033[1;33m>> filler object files deleted.\n\033[0m" 
+	@echo "\033[1;33m>> filler object files deleted.\033[0m" 
 
 fclean: clean
 	@rm -fr $(NAME)
 	@make -C libftprintf fclean
-	@echo "\033[0;31m>> filler all resources deleted.\n\033[0m" 
+	@echo "\033[0;31m>> filler all resources deleted.\033[0m" 
 
 re: fclean all

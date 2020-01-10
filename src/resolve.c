@@ -37,6 +37,7 @@ t_point	ft_resolve(char **map, char **token)
 				((score = get_point_score(map, ij, &pt, token)) < bestscore))
 			{
 				bestscore = score;
+			//	dprintf(0, "best score == %d;\n", bestscore);
 				bestplace = pt;
 			}
 			ij.j++;
@@ -63,7 +64,7 @@ int		get_point_score(char **map, t_point ij, t_point *pos, char **token)
 		while (token[xy.i][xy.j])
 		{
 			ret = is_placeable(map, ij, token, xy);
-			if ((ret != -1) && (ret <= score))
+			if ((ret != -1337) && (ret <= score))
 			{
 				score = ret;
 				pos->i = ij.i - xy.i;
@@ -95,7 +96,9 @@ int		ft_get(char tok, char **map, t_point idx, int *bol)
 			ret = map[idx.i][idx.j];
 		else if ((map[idx.i][idx.j] == -1) && (*bol == 0))
 		{
+		//	dprintf(0, "================ HERE +=================\n");
 			ret = (int)map[idx.i][idx.j];
+		//	dprintf(0, "================ ret = %d +=================", ret);
 			*bol = 1;
 		}
 	}
@@ -116,7 +119,7 @@ int		is_placeable(char **map, t_point a, char **token, t_point b)
 	int		v[2];
 
 	if ((idx.i = a.i - b.i - 1) <= 0)
-		return (-1);
+		return (-1337);
 	tok.i = -1;
 	v[0] = 0;
 	v[1] = 0;
@@ -127,13 +130,13 @@ int		is_placeable(char **map, t_point a, char **token, t_point b)
 		while (token[tok.i][tok.j])
 		{
 			if ((ret = ft_get(token[tok.i][tok.j++], map, idx, &v[1])) == -1337)
-				return (-1);
+				return (-1337);
 			v[0] += ret;
 			idx.j++;
 		}
 	}
 	if ((token[tok.i] && !map[idx.i]) || (v[1] == 0))
-		return (-1);
+		return (-1337);
 	return (v[0]);
 }
 
