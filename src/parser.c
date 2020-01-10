@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/01 11:46:49 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 09:51:28 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 11:05:45 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ void	ft_parse_input(int fd, int player)
 		ft_shift_token(token, &pad);
 		ft_drow_heatmap(map, player, fd);
 		score = ft_resolve(map, token);
-	//	dprintf(fd, "scooooore === i =%d, j = %d;\n", score.i, score.j);
 		if (score.i != -1337 && score.j != -1337)
 			ft_printf("%d %d\n", score.i - pad.i - 1, score.j - pad.j - 4);
 		ft_memdel2d(&map);

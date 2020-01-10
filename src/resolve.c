@@ -6,7 +6,7 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 21:37:31 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/10 08:52:05 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 11:06:30 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ t_point	ft_resolve(char **map, char **token)
 				((score = get_point_score(map, ij, &pt, token)) < bestscore))
 			{
 				bestscore = score;
-			//	dprintf(0, "best score == %d;\n", bestscore);
 				bestplace = pt;
 			}
 			ij.j++;
@@ -96,9 +95,7 @@ int		ft_get(char tok, char **map, t_point idx, int *bol)
 			ret = map[idx.i][idx.j];
 		else if ((map[idx.i][idx.j] == -1) && (*bol == 0))
 		{
-		//	dprintf(0, "================ HERE +=================\n");
 			ret = (int)map[idx.i][idx.j];
-		//	dprintf(0, "================ ret = %d +=================", ret);
 			*bol = 1;
 		}
 	}
