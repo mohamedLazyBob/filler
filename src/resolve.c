@@ -6,52 +6,51 @@
 /*   By: mzaboub <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 21:37:31 by mzaboub           #+#    #+#             */
-/*   Updated: 2020/01/09 09:59:15 by mzaboub          ###   ########.fr       */
+/*   Updated: 2020/01/10 08:52:05 by mzaboub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-t_point	ft_resoleve(char **map, int fd, char **token)
+/*
+** ***************************************************************************
+*/
+
+t_point	ft_resolve(char **map, char **token)
 {
 	t_point ij;
-	t_point pt_bestscr;
+	t_point pt;
 	t_point	bestplace;
 	int		bestscore;
 	int		score;
 
-	ij.i = 1;
 	bestscore = INT_MAX;
 	bestplace.i = -1337;
 	bestplace.j = -1337;
-	dprintf(fd, "=============== this is the token : \n");
-	print_map(fd, token);
-	while (map[ij.i])
+	ij.i = 0;
+	while (map[++ij.i])
 	{
 		ij.j = 4;
 		while (map[ij.i][ij.j])
 		{
-			if (map[ij.i][ij.j] == -1)
+			if ((map[ij.i][ij.j] == -1) && \
+				((score = get_point_score(map, ij, &pt, token)) < bestscore))
 			{
-				// check the best score to place it in this -1
-				if ((score = get_point_score(map, ij, &pt_bestscr, token, fd)) < bestscore)
-				{
-					bestscore = score;
-					bestplace.i = pt_bestscr.i;
-					bestplace.j = pt_bestscr.j;
-				}
+				bestscore = score;
+				bestplace = pt;
 			}
 			ij.j++;
 		}
-		ij.i++;
 	}
-// by now you should have the bestplce where you can place the token;	
 	return (bestplace);
 }
 
-int		get_point_score(char **map, t_point ij, t_point *pos, char **token, int fd)
+/*
+** ***************************************************************************
+*/
+
+int		get_point_score(char **map, t_point ij, t_point *pos, char **token)
 {
-	// check all possible combinaisons in this ij;
 	t_point xy;
 	int		ret;
 	int		score;
@@ -63,13 +62,12 @@ int		get_point_score(char **map, t_point ij, t_point *pos, char **token, int fd)
 		xy.j = 0;
 		while (token[xy.i][xy.j])
 		{
-			ret = is_placeable(map, ij, token, xy, fd);
+			ret = is_placeable(map, ij, token, xy);
 			if ((ret != -1) && (ret <= score))
 			{
-				score = ret;	
+				score = ret;
 				pos->i = ij.i - xy.i;
 				pos->j = ij.j - xy.j;
-				dprintf(fd, "----------------- valid score : %d.\tpos.i= %d;\tpos.j = %d;\n", score, pos->i, pos->j);
 			}
 			xy.j++;
 		}
@@ -78,49 +76,67 @@ int		get_point_score(char **map, t_point ij, t_point *pos, char **token, int fd)
 	return (score);
 }
 
-int		is_placeable(char **map, t_point a, char **token, t_point b, int fd)
+/*
+** ***************************************************************************
+*/
+
+int		ft_get(char tok, char **map, t_point idx, int *bol)
 {
-	int		row;
-	int		col;
-	int		bol;
-	int		score;
+	int	ret;
+
+	ret = 0;
+	if (tok == '*')
+	{
+		if ((idx.i < 1) || (idx.j < 4) || (map[idx.i][idx.j] == '\0') || \
+			(map[idx.i][idx.j] == 1) || \
+			((map[idx.i][idx.j] == -1) && (*bol == 1)))
+			ret = -1337;
+		else if (map[idx.i][idx.j] != -1)
+			ret = map[idx.i][idx.j];
+		else if ((map[idx.i][idx.j] == -1) && (*bol == 0))
+		{
+			ret = (int)map[idx.i][idx.j];
+			*bol = 1;
+		}
+	}
+	return (ret);
+}
+
+/*
+** ***************************************************************************
+**  v[0] == score
+**	v[1] == bol
+*/
+
+int		is_placeable(char **map, t_point a, char **token, t_point b)
+{
+	t_point	idx;
 	t_point tok;
-	
-	row = a.i - b.i;
-	if (row < 0)
+	int		ret;
+	int		v[2];
+
+	if ((idx.i = a.i - b.i - 1) <= 0)
 		return (-1);
-	tok.i = 0;
-	score = 0;
-	bol = 0;
-	while (token[tok.i] && map[row])
+	tok.i = -1;
+	v[0] = 0;
+	v[1] = 0;
+	while (token[++tok.i] && map[++idx.i])
 	{
 		tok.j = 0;
-		col = a.j - b.j;
+		idx.j = a.j - b.j;
 		while (token[tok.i][tok.j])
 		{
-			if (token[tok.i][tok.j] == '*')
-			{
-				if (row < 1 || col < 4 || (map[row][col] == '\0') || map[row][col] == 1)//the original pading of the map
-					return (-1);
-				if (map[row][col] != -1)
-					score += map[row][col];
-				else if ((map[row][col] == -1) && (bol == 0))
-				{
-					score += (int)map[row][col];
-					bol = 1;
-				}
-				else if ((map[row][col] == -1) && (bol == 1))
-					return (-1);
-			}
-			tok.j++;
-			col++;
+			if ((ret = ft_get(token[tok.i][tok.j++], map, idx, &v[1])) == -1337)
+				return (-1);
+			v[0] += ret;
+			idx.j++;
 		}
-		tok.i++;
-		row++;
 	}
-	if (token[tok.i] && !map[row])
+	if ((token[tok.i] && !map[idx.i]) || (v[1] == 0))
 		return (-1);
-	if (bol == 0)
-		return (-1);
-	return (score);
+	return (v[0]);
 }
+
+/*
+** ***************************************************************************
+*/
